@@ -46,6 +46,7 @@ node {
 //   docker.image('aokinobu/java-release').pull()
 
     // run it once to completion
+    echo VERSION_NUMBER
     docker.image('aokinobu/java-release:' + RELEASE_VERSION).inside('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + VERSION_NUMBER + ' -e EXTENSION=.jar') {
       sh '/run.sh'
     }
