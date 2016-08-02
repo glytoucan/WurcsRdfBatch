@@ -16,3 +16,5 @@ services:
     environment:
       - PROJECT=${PROJECT_NAME}
       - HOME=/root/batch/${PROJECT_NAME}
+      - SPRING_TRIPLESTORE_URL
+      - SPRING_TRIPLESTORE_PASSWORD
