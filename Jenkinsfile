@@ -50,10 +50,10 @@ node {
 //   }
 //   sh 'docker commit ${c.id} ' + ARTIFACTID
   
-  def count = 0;
-  waitUntil {
-    sh 'docker inspect -f {{.State.Running}} ' + c.id
-  }
+//  def count = 0;
+//  waitUntil {
+//    sh 'docker inspect -f {{.State.Running}} ' + c.id
+//  }
   
   stage 'docker commit'
 
