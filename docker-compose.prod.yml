@@ -1,0 +1,13 @@
+version: '2'
+services:
+  data:
+    image: glycoinfo.org:5000/${PROJECT_NAME}:${BATCH_VERSION}
+    command: echo "binaries ready"
+    volumes:
+      - /data
+  batch:
+    image: java:8u91-jdk
+    working_dir: /data
+    command: java -jar ${PROJECT_NAME}-${BATCH_VERSION}.jar
+    volumes_from:
+      - data
