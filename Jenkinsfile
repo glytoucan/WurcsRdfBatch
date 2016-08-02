@@ -7,7 +7,7 @@ PROJECT_PATH=WORKSPACE_PARENT + "/" + WORKSPACE + "/" + PROJECT
 RELEASE_VERSION="0.0.1-SNAPSHOT"
 
 node {
-  stage PROJECT + 'version ' + env.BATCH_VERSION + ' start'
+  stage PROJECT + ' version ' + env.BATCH_VERSION + ' start'
 
   stage 'git clone'
   git 'https://github.com/glytoucan/' + REPOSITORY + '.git'
@@ -18,7 +18,7 @@ node {
     sh 'mvn -DskipTests=true -B -s settings.xml clean package'
   }
 
-//   stage 'package jar'
+   stage 'package jar'
 //   def c = docker.image('aokinobu/java-release:0.0.1-SNAPSHOT').run('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + env.BATCH_VERSION + ' -e EXTENSION=.jar -v /var/jenkins_home/workspace/' + WORKSPACE + ':/workspace --workdir=/workspace', 'ls -al /workspace');
 //   sh 'echo ' + pwd()
 //   sh 'ls -al ' + pwd()
