@@ -4,12 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.glytoucan.batch</groupId>
 	<artifactId>wurcsrdf</artifactId>
-	<parent>
-		<groupId>org.glytoucan</groupId>
-		<artifactId>pom-site</artifactId>
-		<version>1.2.1-SNAPSHOT</version>
-		<relativePath>../pom-site/pom.xml</relativePath>
-	</parent>
+  <version>1.2.1-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.glycoinfo</groupId>
@@ -40,11 +35,20 @@
 				<configuration>
 					<mainClass>${spring.mainClass}</mainClass>
 				</configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+          <source>1.7</source>
+          <target>1.7</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
