@@ -5,9 +5,10 @@ WORKSPACE_PARENT="/srv/jenkins"
 WORKSPACE="workspace"
 PROJECT_PATH=WORKSPACE_PARENT + "/" + WORKSPACE + "/" + PROJECT
 RELEASE_VERSION="0.0.1-SNAPSHOT"
+VERSION_NUMBER=env.BATCH_VERSION
 
 node {
-  stage PROJECT + ' version ' + env.BATCH_VERSION + ' start'
+  stage PROJECT + ' version ' + VERSION_NUMBER + ' start'
 
   stage 'git clone'
   git 'https://github.com/glytoucan/' + REPOSITORY + '.git'
@@ -19,7 +20,7 @@ node {
   }
 
    stage 'package jar'
-//   def c = docker.image('aokinobu/java-release:0.0.1-SNAPSHOT').run('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + env.BATCH_VERSION + ' -e EXTENSION=.jar -v /var/jenkins_home/workspace/' + WORKSPACE + ':/workspace --workdir=/workspace', 'ls -al /workspace');
+//   def c = docker.image('aokinobu/java-release:0.0.1-SNAPSHOT').run('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + VERSION_NUMBER + ' -e EXTENSION=.jar -v /var/jenkins_home/workspace/' + WORKSPACE + ':/workspace --workdir=/workspace', 'ls -al /workspace');
 //   sh 'echo ' + pwd()
 //   sh 'ls -al ' + pwd()
 //   sh 'ls -al /' + WORKSPACE_PARENT + '/' + WORKSPACE + '/' + PROJECT
@@ -34,17 +35,23 @@ node {
 
 //   sh 'docker logs ' + c.id
 
-//   sh 'docker run --rm -e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + env.BATCH_VERSION + ' -e EXTENSION=.jar -v /var/jenkins_home/workspace/' + WORKSPACE + ':/workspace --workdir=/workspace aokinobu/java-release:0.0.1-SNAPSHOT ls -al /workspace/target'
+//   sh 'docker run --rm -e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + VERSION_NUMBER + ' -e EXTENSION=.jar -v /var/jenkins_home/workspace/' + WORKSPACE + ':/workspace --workdir=/workspace aokinobu/java-release:0.0.1-SNAPSHOT ls -al /workspace/target'
 
 //   sh 'docker stop ' + ARTIFACTID + '_container'
 //   sh 'docker rm ' + ARTIFACTID + '_container'
-//   sh 'docker run -e PROJECT_FOLDER=/workspace/target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + env.BATCH_VERSION + ' -e EXTENSION=.jar -v /var/jenkins_home/workspace/' + WORKSPACE + ':/workspace --name=' + ARTIFACTID + '_container aokinobu/java-release:0.0.1-SNAPSHOT sh /run.sh'
+//   sh 'docker run -e PROJECT_FOLDER=/workspace/target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + VERSION_NUMBER + ' -e EXTENSION=.jar -v /var/jenkins_home/workspace/' + WORKSPACE + ':/workspace --name=' + ARTIFACTID + '_container aokinobu/java-release:0.0.1-SNAPSHOT sh /run.sh'
   
 //   def d = docker.image('debian:jessie').run('', 'ls -al /var/jenkins_home/workspace/docker-motif-build')
 //   sh 'docker logs ' + d.id
 //   docker.image('aokinobu/java-release').pull()
-  def c = docker.image('aokinobu/java-release:' + RELEASE_VERSION).run('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + env.BATCH_VERSION + ' -e EXTENSION=.jar --workdir=/workspace -v ' + PROJECT_PATH + ':/workspace', '/run.sh')
-//   docker.image('aokinobu/java-release:' + RELEASE_VERSION).inside('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + env.BATCH_VERSION + ' -e EXTENSION=.jar') {
+
+    // run it once to completion
+    docker.image('aokinobu/java-release:' + RELEASE_VERSION).inside('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + VERSION_NUMBER + ' -e EXTENSION=.jar') {
+      sh '/run.sh'
+    }
+
+    def c = docker.image('aokinobu/java-release:' + RELEASE_VERSION).run('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + VERSION_NUMBER + ' -e EXTENSION=.jar --workdir=/workspace -v ' + PROJECT_PATH + ':/workspace', '/run.sh')
+//   docker.image('aokinobu/java-release:' + RELEASE_VERSION).inside('-e PROJECT_FOLDER=target/ -e PROJECT_FILE=' + ARTIFACTID + '- -e VERSION_NUMBER=' + VERSION_NUMBER + ' -e EXTENSION=.jar') {
 //      c -> 
 //      sh '/run.sh'
 //   }
@@ -61,7 +68,7 @@ node {
 
   stage 'docker push'
   docker.withRegistry('http://glycoinfo.org:5000') {
-    docker.image(ARTIFACTID).push(env.BATCH_VERSION)
+    docker.image(ARTIFACTID).push(VERSION_NUMBER)
   }
 
   stage 'docker stop container'
