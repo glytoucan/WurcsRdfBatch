@@ -15,7 +15,7 @@ node {
   stage 'build jar'
   docker.image('maven:3.3.3-jdk-8').inside {
     writeFile file: 'settings.xml', text: "<settings><localRepository>${pwd()}/.m2repo</localRepository></settings>"
-    sh 'mvn -DskipTests=true -B -s settings.xml clean package'
+    sh 'mvn -DskipTests=true -B -s settings.xml -P motif clean package'
   }
 
    stage 'package jar'
