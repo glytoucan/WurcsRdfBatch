@@ -1,0 +1,15 @@
+logging:
+  path: ${HOME}/glytoucan/${PROJECT}/logs
+  level:
+    org.glycoinfo: DEBUG
+    org.glytoucan: DEBUG
+spring:
+    triplestore:
+        driverClassName: virtuoso.jdbc4.Driver
+        url: jdbc:virtuoso://test.ts.glytoucan.org:1111
+        username: dba
+        password: dba
+wurcs:
+  graph:
+    target: <http://rdf.glytoucan.org/sequence/wurcs>
+    ms: <http://rdf.glytoucan.org/wurcs/ms>
